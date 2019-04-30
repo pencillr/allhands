@@ -1,29 +1,32 @@
-{"ship": {
-    "name": "Comedia",
-    "attributes": {
-        "speed": 8,
-        "detection_bonus": 15,
-        "manouverability": 20,
-        "void_shield": 2,
-        "hull_integrity": 35,
-        "armour": 18,
-        "weapons": {
-            "dorsal_1": {
-                "thunderstrike": {
-                    "strength": 3,
-                    "damage": "1d10+1",
-                    "range": 4,
-                    "crit_rating": 6
-                }
-            },
-            "dorsal_2": {
-                "thunderstrike": {
-                    "strength": 3,
-                    "damage": "1d10+1",
-                    "range": 4,
-                    "crit_rating": 6
+{"ship": [
+    {
+        "name": "Comedia",
+        "attributes": {
+            "speed": 8,
+            "detection_bonus": 15,
+            "manouverability": 20,
+            "void_shield": 2,
+            "hull_integrity": 35,
+            "armour": 18,
+            "weapons": {
+                "dorsal_1": {
+                    "thunderstrike": {
+                        "strength": 3,
+                        "damage": "1d10+1",
+                        "range": 4,
+                        "crit_rating": 6
+                    }
+                },
+                "dorsal_2": {
+                    "thunderstrike": {
+                        "strength": 3,
+                        "damage": "1d10+1",
+                        "range": 4,
+                        "crit_rating": 6
+                    }
                 }
             }
         }
     }
-}}
+]
+}
