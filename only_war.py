@@ -4,14 +4,14 @@ import argparse
 import logging
 from pathlib import Path
 
-logger = logging.getLogger('only_war')
+logger = logging.getLogger('__only_war__')
 logging.basicConfig(level=logging.DEBUG)
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--ship-sheets', type=Path, nargs=2,
-                        help='Paths of the json ship sheets' )
+                        help='Paths of the json ship sheets')
     return parser.parse_args()
 
 
@@ -24,7 +24,8 @@ def main():
         battle_scene.create_new_team(ships)
     for opponent in battle_scene.initiate_generator():
         target = battle_scene.choose_target(opponent)
-        print("Attacking: ", target.name)
+        logger.info("The {} is attacking: {}".format(opponent.name, target.name))
+        battle_scene.combat_round(opponent, target)
 
 if __name__ == "__main__":
     main()

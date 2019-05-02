@@ -1,7 +1,7 @@
 import logging
 import random
 
-logger = logging.getLogger('scene')
+logger = logging.getLogger('__scene__')
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -50,3 +50,8 @@ class Scene:
         while enemy_team == friendly_team:
             enemy_team = random.choice(list(self.teams.keys()))
         return random.choice(self.teams[enemy_team])
+
+    def combat_round(self, opponent, target):
+        battery_shots = opponent.attempt_shots()
+        for battery in battery_shots:
+            print(battery_shots[battery])
