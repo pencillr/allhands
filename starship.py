@@ -2,9 +2,6 @@ import json
 import logging
 import random
 
-logger = logging.getLogger('__starship__')
-logging.basicConfig(level=logging.INFO)
-
 
 class Starship:
     def __init__(self, name):
@@ -18,6 +15,7 @@ class Starship:
         self.weapons = None
         self.helmsman_ag = 0
         self.gunner_ag = 0
+        self.logger = self._get_logger(name)
 
     @classmethod
     def init_from_json(cls, json_repr):
@@ -42,13 +40,23 @@ class Starship:
             ships.append(ship)
         return ships
 
+    def _get_logger(self, name):
+        logger = logging.getLogger('__{}__'.format(name))
+        logger.setLevel(logging.DEBUG)
+        ch = logging.StreamHandler()
+        formatter = logging.Formatter('%(name)s - %(message)s')
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+        return logger
+
     def roll_initiative(self):
         return self.detection_bonus + random.randint(1, 10)
 
     def _roll_ballastic(self):
         roll = random.randint(1, 100)
+        self.logger.debug("Roll: {}".format(roll))
         if self.gunner_ag < roll:
-            return
+            return 0
         else:
             return (((self.gunner_ag - roll) // 10) + 1)
 
@@ -69,19 +77,22 @@ class Starship:
             orientation = self.weapons[weapon]
             # TODO: if weapon orientation is valid
             success_rating = self._roll_ballastic()
-            logger.debug("{} rolled {} successes on ballastic on {}".format(self.name, success_rating, weapon))
+            if success_rating:
+                self.logger.debug("{} succeeded with rating {} on ballastic with {}".format(self.name, success_rating - 1, weapon))
+            else:
+                self.logger.debug("{} failed on ballastic roll with {}".format(self.name, weapon))
             if not success_rating:
                 continue
             for battery in orientation:
                 battery_shots[battery] = []
-                logger.debug("Firing {} batteries on {}".format(battery, weapon))
                 battery_stats = self.weapons[weapon][battery]
                 if success_rating > battery_stats['strength']:
                     success_rating = battery_stats['strength']
-                logger.debug("{} hits!".format(success_rating))
+                self.logger.debug("Firing {} batteries on {} {} times".format(battery, weapon, success_rating))
+                self.logger.debug("{} hits!".format(success_rating))
                 for success in range(success_rating):
                     dmg = self._roll(battery_stats['damage'])
-                    logger.debug("No.{} shot damage: {}".format(success, dmg))
+                    self.logger.debug("No.{} shot damage: {}".format(success, dmg))
                     battery_shots[battery].append(dmg)
         return battery_shots
 
@@ -94,11 +105,11 @@ class Starship:
                 self.void_shield_actual -= 1
         full_dmg -= self.armour
         if full_dmg > 0:
-            logger.info("Full damage taken: {}".format(full_dmg))
+            self.logger.info("Full damage taken: {}".format(full_dmg))
             self.hull_integrity -= full_dmg
-            logger.info("Hull integrity: {}".format(self.hull_integrity))
+            self.logger.info("Hull integrity: {}".format(self.hull_integrity))
             if self.hull_integrity <= 0:
-                logger.info("{} is crippled!".format(self.name))
+                self.logger.info("{} is crippled!".format(self.name))
                 self.is_crippled = True
         else:
-            logger.info("No significant damage on {}!".format(self.name))
+            self.logger.info("No significant damage on {}!".format(self.name))
