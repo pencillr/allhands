@@ -35,7 +35,7 @@ def _single_rolls(args):
         if strike_map:
             logger.info("Summing up:")
             for weapon, hits in strike_map.items():
-                logger.info("With battery {} dealt {}".format(weapon, sum(hits)))
+                logger.info("With battery {} dealt {}".format(weapon, "+".join(str(x) for x in hits)))
 
 
 def main():

@@ -87,6 +87,8 @@ class Starship:
                     continue
                 battery_shots[battery] = []
                 battery_stats = self.weapons[weapon][battery]
+                if success_rating - 1 == battery_stats['crit_rating']:
+                    self.logger.debug("Critical hit! with battery {}".format(battery))
                 if success_rating > battery_stats['strength']:
                     success_rating = battery_stats['strength']
                 self.logger.debug("Firing {} batteries on {} {} times".format(battery, weapon, success_rating))
