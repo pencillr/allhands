@@ -76,14 +76,15 @@ class Starship:
         for weapon in self.weapons:
             orientation = self.weapons[weapon]
             # TODO: if weapon orientation is valid
-            success_rating = self._roll_ballastic()
-            if success_rating:
-                self.logger.debug("{} succeeded with rating {} on ballastic with {}".format(self.name, success_rating - 1, weapon))
-            else:
-                self.logger.debug("{} failed on ballastic roll with {}".format(self.name, weapon))
-            if not success_rating:
-                continue
+            self.logger.debug("Firing weapons on {}".format(weapon))
             for battery in orientation:
+                success_rating = self._roll_ballastic()
+                if success_rating:
+                    self.logger.debug("{} succeeded with rating {} on ballastic with {}".format(self.name, success_rating - 1, battery))
+                else:
+                    self.logger.debug("{} failed on ballastic roll with {}".format(self.name, battery))
+                if not success_rating:
+                    continue
                 battery_shots[battery] = []
                 battery_stats = self.weapons[weapon][battery]
                 if success_rating > battery_stats['strength']:

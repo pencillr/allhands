@@ -1,48 +1,56 @@
 {"ship": [
     {
-        "name": "Landau",
+        "name": "Widows_Vendetta",
         "attributes": {
-            "speed": 8,
-            "detection_bonus": 15,
-            "manouverability": 20,
+            "speed": 6,
+            "detection_bonus": 25,
+            "manouverability": 17,
             "void_shield": 2,
-            "hull_integrity": 35,
-            "armour": 18,
+            "hull_integrity": 60,
+            "armour": 20,
             "weapons": {
-                "dorsal_1": {
-                    "thunderstrike_1": {
-                        "strength": 3,
-                        "damage": "1d10+1",
+                "prow": {
+                    "mezoa_lance": {
+                        "strength": 2,
+                        "damage": "1d10+5",
                         "range": 4,
-                        "crit_rating": 6
+                        "crit_rating": 4
                     }
                 },
-                "dorsal_2": {
-                    "thunderstrike_2": {
-                        "strength": 3,
-                        "damage": "1d10+1",
-                        "range": 4,
-                        "crit_rating": 6
+                "starboard": {
+                    "mars_pattern": {
+                        "strength": 6,
+                        "damage": "1d10+2",
+                        "range": 6,
+                        "crit_rating": 5
+                    }
+                },
+                "port": {
+                    "mars_pattern": {
+                        "strength": 6,
+                        "damage": "1d10+2",
+                        "range": 6,
+                        "crit_rating": 5
                     }
                 }
             }
         },
         "crew": {
-            "helmsman_agility": 50,
-            "gunner_agility": 48
+            "helmsman_agility": 45,
+            "gunner_agility": 30
         }
     },
     {
-        "name": "Irontide",
+        "name": "Purity_Seal",
         "attributes": {
-            "speed": 8,
-            "detection_bonus": 15,
-            "manouverability": 20,
-            "void_shield": 2,
-            "hull_integrity": 35,
-            "armour": 18,
+            "speed": 10,
+            "detection_bonus": 12,
+            "manouverability": 28,
+            "void_shield": 1,
+            "hull_integrity": 30,
+            "armour": 14,
             "weapons": {
-                "dorsal_1": {
+                "prow": {
                     "thunderstrike_1": {
                         "strength": 3,
                         "damage": "1d10+1",
@@ -50,52 +58,52 @@
                         "crit_rating": 6
                     }
                 },
-                "dorsal_2": {
-                    "thunderstrike_2": {
-                        "strength": 3,
-                        "damage": "1d10+1",
-                        "range": 4,
-                        "crit_rating": 6
+                "dorsal": {
+                    "starbreaker_lance": {
+                        "strength": 1,
+                        "damage": "1d10+2",
+                        "range": 5,
+                        "crit_rating": 3
                     }
                 }
             }
         },
         "crew": {
-            "helmsman_agility": 46,
-            "gunner_agility": 51
-        }
-    },
-    {
-        "name": "Witchbane",
-        "attributes": {
-            "speed": 8,
-            "detection_bonus": 15,
-            "manouverability": 20,
-            "void_shield": 2,
-            "hull_integrity": 35,
-            "armour": 18,
-            "weapons": {
-                "dorsal_1": {
-                    "thunderstrike_1": {
-                        "strength": 3,
-                        "damage": "1d10+1",
-                        "range": 4,
-                        "crit_rating": 6
-                    }
-                },
-                "dorsal_2": {
-                    "thunderstrike_2": {
-                        "strength": 3,
-                        "damage": "1d10+1",
-                        "range": 4,
-                        "crit_rating": 6
-                    }
-                }
-            }
-        },
-        "crew": {
-            "helmsman_agility": 42,
+            "helmsman_agility": 40,
             "gunner_agility": 40
+        }
+    },
+    {
+        "name": "Cherubs_Arrow",
+        "attributes": {
+            "speed": 10,
+            "detection_bonus": 12,
+            "manouverability": 28,
+            "void_shield": 1,
+            "hull_integrity": 30,
+            "armour": 14,
+            "weapons": {
+                "prow": {
+                    "thunderstrike_1": {
+                        "strength": 3,
+                        "damage": "1d10+1",
+                        "range": 4,
+                        "crit_rating": 6
+                    }
+                },
+                "dorsal": {
+                    "starbreaker_lance": {
+                        "strength": 1,
+                        "damage": "1d10+2",
+                        "range": 5,
+                        "crit_rating": 3
+                    }
+                }
+            }
+        },
+        "crew": {
+            "helmsman_agility": 45,
+            "gunner_agility": 45
         }
     }
 ]
