@@ -4,6 +4,7 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_migrate import Migrate
+from flask_moment import Moment
 import logging
 from logging.handlers import SMTPHandler
 
@@ -14,6 +15,7 @@ login.login_view = 'login' # view function that handles logins
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 mail = Mail(app)
+moment = Moment(app)
 
 if not app.debug:
     if app.config['MAIL_SERVER']:
