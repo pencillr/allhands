@@ -2,6 +2,7 @@ from app import db, app, login
 from datetime import datetime
 from flask_login import UserMixin
 from hashlib import md5
+from random import randint
 from werkzeug.security import generate_password_hash, check_password_hash
 from time import time
 import jwt
@@ -16,6 +17,10 @@ followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
+
+
+def generate_agility():
+    return randint(0, 30) + 40
 
 
 class User(UserMixin, db.Model):
@@ -87,6 +92,10 @@ class User(UserMixin, db.Model):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
+    ship_name = db.Column(db.String(30))
+    ship_type = db.Column(db.Integer)
+    helmsman_agility = db.Column(db.Integer, default=generate_agility)
+    gunner_agility = db.Column(db.Integer, default=generate_agility)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # user.id:
     # model is given by its database table name, for which SQLAlchemy automatically

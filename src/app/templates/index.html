@@ -6,6 +6,16 @@
         <form action="" method="post">
             {{ form.hidden_tag() }}
             <p>
+                {{ form.ship_name.label }}<br>
+                {{ form.ship_name(cols=30, rows=1) }}<br>
+                {% for error in form.ship_name.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+                {{ form.ship_type.label }}<br>
+                {{ form.ship_type(size=2) }}<br>
+                {% for error in form.ship_type.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
                 {{ form.post.label }}<br>
                 {{ form.post(cols=32, rows=4) }}<br>
                 {% for error in form.post.errors %}

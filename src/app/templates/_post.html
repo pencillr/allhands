@@ -5,9 +5,19 @@
             <a href="{{ url_for('user', username=post.author.username) }}">
                 {{ post.author.username }}
             </a>
-            said {{ moment(post.timestamp).fromNow() }}:
+            created a ship named {{ post.ship_name }} - {{ moment(post.timestamp).fromNow() }}:
             <br>
-            {{ post.body }}
+            Type:
+            {% set shiptype = post.ship_type %}
+            {% if shiptype == 1 %}
+            Sword Class Frigate
+            {% else %}
+            Tempest Class Frigate
+            {% endif %}<br>
+            Description:<br>
+            {{ post.body }}<br>
+            Helmsman's Agility: {{ post.helmsman_agility }}<br>
+            Gunner's Agility: {{ post.gunner_agility }}<br>
         </td>
     </tr>
 </table>

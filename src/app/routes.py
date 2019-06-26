@@ -21,7 +21,12 @@ def defore_request():
 def index():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, author=current_user)
+        post = Post(
+            body=form.post.data,
+            author=current_user,
+            ship_name=form.ship_name.data,
+            ship_type=int(form.ship_type.data)
+        )
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')

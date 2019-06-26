@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User
+from app.models import User, Post
 
 
 class LoginForm(FlaskForm):
@@ -47,10 +47,20 @@ class EditProfileForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    post = TextAreaField('Say something', validators=[
+    ship_name = StringField('Ship name', validators=[DataRequired()])
+    ship_type = SelectField('Ship type', choices=[
+        ('1', 'Sword Class Frigate'),
+        ('2', 'Tempest Class Frigate')
+    ])
+    post = TextAreaField('Describe your ship', validators=[
         DataRequired(), Length(min=1, max=140)
     ])
     submit = SubmitField('Submit')
+
+    def validate_ship_name(self, ship_name):
+        ship = Post.query.filter_by(ship_name=ship_name.data).first()
+        if ship is not None:
+            raise ValidationError('Ship name reserved.')
 
 
 class ResetPasswordRequestForm(FlaskForm):
