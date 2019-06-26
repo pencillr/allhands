@@ -2,7 +2,8 @@
 
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
-    <form action="" method="post">
+    {% if form %}
+        <form action="" method="post">
             {{ form.hidden_tag() }}
             <p>
                 {{ form.post.label }}<br>
@@ -13,13 +14,14 @@
             </p>
             <p>{{ form.submit() }}</p>
         </form>
-        {% for post in posts %}
-            {% include '_post.html' %}
-        {% endfor %}
-        {% if prev_url %}
-            <a href="{{ prev_url }}">Newer posts</a>
-        {% endif %}
-        {% if next_url %}
-            <a href="{{ next_url }}">Older posts</a>
-        {% endif %}
+    {% endif %}
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {% endfor %}
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Newer posts</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Older posts</a>
+    {% endif %}
 {% endblock %}
