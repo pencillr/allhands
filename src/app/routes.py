@@ -6,6 +6,7 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, Re
 from app.models import User, Post
 from datetime import datetime
 from werkzeug.urls import url_parse
+from app.simulator.runner import Runner
 
 
 @app.before_request
@@ -90,6 +91,11 @@ def fight(ship_name):
     form.ship.choices = [(s.ship_name, s.ship_name) for s in Post.query.filter_by(author=current_user)]
     if form.validate_on_submit():
         flash("You chose {}".format(form.ship.data))
+        own_ship = Post.query.filter_by(ship_name=form.ship.data).first()
+        runner = Runner()
+        runner.add_sheet(ship.ship_type, ship.ship_name, ship.gunner_agility, ship.helmsman_agility)
+        runner.add_sheet(own_ship.ship_type, own_ship.ship_name, own_ship.gunner_agility, own_ship.helmsman_agility)
+        runner.run()
     return render_template("fight.html", title='Fight', enemy=ship, form=form)
 
 

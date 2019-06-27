@@ -21,6 +21,14 @@ class Starship:
     def init_from_json(cls, json_repr):
         with open(json_repr) as jr:
             ship_repr = json.load(jr)
+        return cls.init_common(ship_repr)
+
+    @classmethod
+    def init_from_dict(cls, dict_repr):
+        return cls.init_common(dict_repr)
+
+    @classmethod
+    def init_common(cls, ship_repr):
         ships = []
         for ship_item in ship_repr['ship']:
             ship_attributes = ship_item['attributes']

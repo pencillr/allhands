@@ -1,0 +1,44 @@
+{"ship": [
+    {
+        "name": "Tempest",
+        "attributes": {
+            "speed": 6,
+            "detection_bonus": 25,
+            "manouverability": 17,
+            "void_shield": 2,
+            "hull_integrity": 60,
+            "armour": 20,
+            "weapons": {
+                "prow": {
+                    "mezoa_lance": {
+                        "strength": 2,
+                        "damage": "1d10+5",
+                        "range": 4,
+                        "crit_rating": 4
+                    }
+                },
+                "starboard": {
+                    "mars_pattern": {
+                        "strength": 6,
+                        "damage": "1d10+2",
+                        "range": 6,
+                        "crit_rating": 5
+                    }
+                },
+                "port": {
+                    "mars_pattern": {
+                        "strength": 6,
+                        "damage": "1d10+2",
+                        "range": 6,
+                        "crit_rating": 5
+                    }
+                }
+            }
+        },
+        "crew": {
+            "helmsman_agility": 0,
+            "gunner_agility": 0
+        }
+    }
+]
+}
