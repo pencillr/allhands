@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.email import send_password_reset_email
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm
 from app.models import User, Post
 from datetime import datetime
 from werkzeug.urls import url_parse
@@ -43,20 +43,40 @@ def index():
                            prev_url=prev_url)
 
 
-@app.route('/explore')
+@app.route('/explore', methods=['GET', 'POST'])
 @login_required
 def explore():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('index.html', title='Explore', posts=posts)
+    search_form = SearchForm()
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
-        page, app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('explore', page=posts.next_num) \
-        if posts.has_next else None
-    prev_url = url_for('explore', page=posts.prev_num) \
-        if posts.has_prev else None
-    return render_template("index.html", title='Explore', posts=posts.items,
-                          next_url=next_url, prev_url=prev_url)
+    next_url = None
+    prev_url = None
+    if search_form.validate_on_submit():
+        redirect(request.path)
+        found = False
+        posts = []
+        all_posts = Post.query.order_by(Post.timestamp.desc()).all()
+        for pst in all_posts:
+            if pst.ship_name and search_form.q.data.lower() in pst.ship_name.lower():
+                posts.append(pst)
+                found = True
+        if not found:
+            flash('Ship not found!')
+        else:
+            total = len(posts)
+            next_url = url_for('explore', page=page + 1) \
+                if total > page * app.config['POSTS_PER_PAGE'] else None
+            prev_url = url_for('explore', page=page - 1) \
+                if page > 1 else None
+    else:
+        paginated = Post.query.order_by(Post.timestamp.desc()).paginate(
+                page, app.config['POSTS_PER_PAGE'], False)
+        next_url = url_for('explore', page=paginated.next_num) \
+            if paginated.has_next else None
+        prev_url = url_for('explore', page=paginated.prev_num) \
+            if paginated.has_prev else None
+        posts = paginated.items
+    return render_template("index.html", title='Explore', posts=posts,
+                          next_url=next_url, prev_url=prev_url, search=search_form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

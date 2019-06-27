@@ -2,7 +2,17 @@
 
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
+    {% if search %}
+        <form action="" method="post">
+            <p>
+                {{ search.hidden_tag() }}
+                {{ search.q.label }} a ship:
+                {{ search.q(cols=30, rows=1) }}<br>
+            </p>
+        </form>
+    {% endif %}
     {% if form %}
+        <h3>Create a Ship:</h3>
         <form action="" method="post">
             {{ form.hidden_tag() }}
             <p>

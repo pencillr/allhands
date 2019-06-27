@@ -16,3 +16,11 @@ The app currently needs **two** json documents *representing a collection of shi
     - Know which batteries can shoot at what
 - There should be a visual representation of the fight
     - Plan to do this very simply with mathplotlib
+
+## Test run locally
+```
+python3 -m venv ./venv
+bash source ./venv/bin/activate
+pip install -r your_requirements.txt
+flask db upgrade
+```

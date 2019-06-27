@@ -8,6 +8,7 @@ from flask_moment import Moment
 import logging
 from logging.handlers import SMTPHandler
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 login = LoginManager(app)
@@ -16,6 +17,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 mail = Mail(app)
 moment = Moment(app)
+
 
 if not app.debug:
     if app.config['MAIL_SERVER']:
