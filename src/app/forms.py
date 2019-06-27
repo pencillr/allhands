@@ -77,3 +77,8 @@ class ResetPasswordForm(FlaskForm):
 
 class SearchForm(FlaskForm):
     q = StringField(('Search'), validators=[DataRequired()])
+
+
+class ChooseShip(FlaskForm):
+    ship = SelectField('Your Ship', validators=[DataRequired()])
+    submit = SubmitField('Attack')

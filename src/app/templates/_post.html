@@ -18,6 +18,11 @@
             {{ post.body }}<br>
             Helmsman's Agility: {{ post.helmsman_agility }}<br>
             Gunner's Agility: {{ post.gunner_agility }}<br>
+            {% if post.author != current_user %}
+                <a href="{{ url_for('fight', ship_name=post.ship_name) }}">
+                        Fight this ship!
+                </a>
+            {% endif %}
         </td>
     </tr>
 </table>

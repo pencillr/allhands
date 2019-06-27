@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.email import send_password_reset_email
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm, ChooseShip
 from app.models import User, Post
 from datetime import datetime
 from werkzeug.urls import url_parse
@@ -77,6 +77,20 @@ def explore():
         posts = paginated.items
     return render_template("index.html", title='Explore', posts=posts,
                           next_url=next_url, prev_url=prev_url, search=search_form)
+
+
+@app.route('/fight/<ship_name>', methods=['GET', 'POST'])
+@login_required
+def fight(ship_name):
+    ship = Post.query.filter_by(ship_name=ship_name).first_or_404()
+    if current_user == ship.author:
+        flash("Cannot attack your own ships!")
+        return redirect(url_for('index'))
+    form = ChooseShip()
+    form.ship.choices = [(s.ship_name, s.ship_name) for s in Post.query.filter_by(author=current_user)]
+    if form.validate_on_submit():
+        flash("You chose {}".format(form.ship.data))
+    return render_template("fight.html", title='Fight', enemy=ship, form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
