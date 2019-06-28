@@ -1,8 +1,19 @@
-from starship import Starship
-from scene import Scene
+from app.simulator.starship import Starship
+from app.simulator.scene import Scene
 import argparse
 import logging
 from pathlib import Path
+
+
+class Report:
+    def __init__(self):
+        self.report = []
+
+    def write(self, entry):
+        self.report.append(entry)
+
+    def get_reports(self):
+        return self.report
 
 
 def get_logger():
@@ -17,9 +28,10 @@ def get_logger():
 
 def _start_standalone_battle(args):
     json_repr_files = args.ship_sheets
-    battle_scene = Scene()
+    report = Report()
+    battle_scene = Scene(report)
     for sheet in json_repr_files:
-        ships = Starship.init_from_json(sheet)
+        ships = Starship.init_from_json(sheet, report)
         battle_scene.create_new_team(ships)
     battle_scene.combat_loop()
 
@@ -27,7 +39,7 @@ def _start_standalone_battle(args):
 def _single_rolls(args):
     logger = get_logger()
     json_repr = args.ship_sheet
-    ships = Starship.init_from_json(json_repr)
+    ships = Starship.init_from_json(json_repr, report)
     for ship in ships:
         logger.info("Rolls for {}".format(ship.name))
         logger.info("Initiative: {}".format(ship.roll_initiative()))

@@ -16,19 +16,20 @@ class Starship:
         self.helmsman_ag = 0
         self.gunner_ag = 0
         self.logger = self._get_logger(name)
+        self.report = None
 
     @classmethod
-    def init_from_json(cls, json_repr):
+    def init_from_json(cls, json_repr, report):
         with open(json_repr) as jr:
             ship_repr = json.load(jr)
-        return cls.init_common(ship_repr)
+        return cls.init_common(ship_repr, report)
 
     @classmethod
-    def init_from_dict(cls, dict_repr):
-        return cls.init_common(dict_repr)
+    def init_from_dict(cls, dict_repr, report):
+        return cls.init_common(dict_repr, report)
 
     @classmethod
-    def init_common(cls, ship_repr):
+    def init_common(cls, ship_repr, report):
         ships = []
         for ship_item in ship_repr['ship']:
             ship_attributes = ship_item['attributes']
@@ -45,6 +46,7 @@ class Starship:
             ship.helmsman_ag = ship_crew["helmsman_agility"]
             ship.gunner_ag = ship_crew["gunner_agility"]
             ship.is_crippled = False
+            ship.report = report
             ships.append(ship)
         return ships
 
@@ -85,25 +87,35 @@ class Starship:
             orientation = self.weapons[weapon]
             # TODO: if weapon orientation is valid
             self.logger.debug("Firing weapons on {}".format(weapon))
+            self.report.write("Firing weapons on {}".format(weapon))
             for battery in orientation:
                 success_rating = self._roll_ballastic()
                 if success_rating:
-                    self.logger.debug("{} succeeded with rating {} on ballastic with {}".format(self.name, success_rating - 1, battery))
+                    success_message = "{} succeeded with rating {} on ballastic with {}".format(self.name, success_rating - 1, battery)
+                    self.logger.debug(success_message)
+                    self.report.write(success_message)
                 else:
-                    self.logger.debug("{} failed on ballastic roll with {}".format(self.name, battery))
+                    fail_message = "{} failed on ballastic roll with {}".format(self.name, battery)
+                    self.logger.debug(fail_message)
+                    self.report.write(fail_message)
                 if not success_rating:
                     continue
                 battery_shots[battery] = []
                 battery_stats = self.weapons[weapon][battery]
                 if success_rating - 1 == battery_stats['crit_rating']:
                     self.logger.debug("Critical hit! with battery {}".format(battery))
+                    self.report.write("Critical hit! with battery {}".format(battery))
                 if success_rating > battery_stats['strength']:
                     success_rating = battery_stats['strength']
-                self.logger.debug("Firing {} batteries on {} {} times".format(battery, weapon, success_rating))
+                firing_message = "Firing {} batteries on {} {} times".format(battery, weapon, success_rating)
+                self.logger.debug(firing_message)
+                self.report.write(firing_message)
                 self.logger.debug("{} hits!".format(success_rating))
+                self.report.write("{} hits!".format(success_rating))
                 for success in range(success_rating):
                     dmg = self._roll(battery_stats['damage'])
                     self.logger.debug("No.{} shot damage: {}".format(success, dmg))
+                    self.report.write("No.{} shot damage: {}".format(success, dmg))
                     battery_shots[battery].append(dmg)
         return battery_shots
 
@@ -117,10 +129,14 @@ class Starship:
         full_dmg -= self.armour
         if full_dmg > 0:
             self.logger.info("Full damage taken: {}".format(full_dmg))
+            self.report.write("Full damage taken: {}".format(full_dmg))
             self.hull_integrity -= full_dmg
             self.logger.info("Hull integrity: {}".format(self.hull_integrity))
+            self.report.write("Hull integrity: {}".format(self.hull_integrity))
             if self.hull_integrity <= 0:
                 self.logger.info("{} is crippled!".format(self.name))
+                self.report.write("{} is crippled!".format(self.name))
                 self.is_crippled = True
         else:
             self.logger.info("No significant damage on {}!".format(self.name))
+            self.report.write("No significant damage on {}!".format(self.name))

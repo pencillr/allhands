@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.email import send_password_reset_email
@@ -95,8 +95,20 @@ def fight(ship_name):
         runner = Runner()
         runner.add_sheet(ship.ship_type, ship.ship_name, ship.gunner_agility, ship.helmsman_agility)
         runner.add_sheet(own_ship.ship_type, own_ship.ship_name, own_ship.gunner_agility, own_ship.helmsman_agility)
-        runner.run()
+        looser = runner.run()
+        session['report'] = runner.report.get_reports()
+        if looser != own_ship.ship_name:
+            return redirect(url_for('get_result', looser=looser))
+        return redirect(url_for('get_result', looser=looser))
     return render_template("fight.html", title='Fight', enemy=ship, form=form)
+
+
+@app.route('/result/lost:<looser>')
+@login_required
+def get_result(looser):
+    report = session['report']
+    session.pop('report', None)
+    return render_template("result.html", title='Result', looser=looser, report=report)
 
 
 @app.route('/login', methods=['GET', 'POST'])

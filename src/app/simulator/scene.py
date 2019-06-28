@@ -3,10 +3,12 @@ import random
 
 
 class Scene:
-    def __init__(self):
+    def __init__(self, report):
+        self.report = report
         self.teams = {}
         self.available_teams = {'gamma', 'delta'}
         self.logger = self._get_logger("Theatre")
+        self.looser = None
 
     def _get_logger(self, name):
         logger = logging.getLogger('__{}__'.format(name))
@@ -44,8 +46,10 @@ class Scene:
                     })
         init_order.sort(key=lambda x: x['initiative'], reverse=True)
         for opponent in init_order:
-            self.logger.debug("{} at team {} rolled initiative: {}".format(
-                opponent['opponent'].name, opponent['team'], opponent['initiative']))
+            message = "{} at team {} rolled initiative: {}".format(
+                opponent['opponent'].name, opponent['team'], opponent['initiative'])
+            self.logger.debug(message)
+            self.report.write(message)
             yield opponent['opponent']
 
     def choose_target(self, attacker):
@@ -65,6 +69,7 @@ class Scene:
                 target.bear_shots(battery_shots[battery])
         else:
             self.logger.info("Miss!")
+            self.report.write("Miss")
 
     def battle_keeps_going_check(self):
         for team in self.teams:
@@ -75,6 +80,8 @@ class Scene:
                     d_count += 1
             if d_count >= len(ships):
                 self.logger.info("{} team has no more ships.".format(team))
+                self.report.write("{} team has no more ships.".format(team))
+                self.looser = self.teams[team][0].name
                 return False
         return True
 
@@ -82,9 +89,11 @@ class Scene:
         rounds = 1
         while self.battle_keeps_going_check():
             self.logger.info("Tactical round No.{}:".format(rounds))
+            self.report.write("Tactical round No.{}:".format(rounds))
             for opponent in self.initiate_generator():
                 target = self.choose_target(opponent)
                 if not opponent.is_crippled:
                     self.logger.info("The {} is attacking: {}".format(opponent.name, target.name))
+                    self.report.write("The {} is attacking: {}".format(opponent.name, target.name))
                     self.combat_round(opponent, target)
             rounds += 1
